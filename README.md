@@ -9,15 +9,26 @@ Messages between server and client are sent via SignalR. The following messages 
 
 #### myLocation
 ```
-{"some json code here"}
+location
+{
+  latitude: 52.3702160
+  longitude: 4.8951680
+}
 ```
 
 #### startConversation
 ```
-{"some json code here"}
+conversation
+{
+  user: 12
+}
 ```
 
 #### sendMessage
 ```
-{"some json code here"}
+message
+{
+  user_id: 123
+  message: "Hello user 132!"
+}
 ```
