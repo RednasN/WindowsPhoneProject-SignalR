@@ -3,20 +3,27 @@ using System.Collections.Generic;
 
 namespace WPSignalR
 {
-    class location
+    class Location
     {
-        private int userId { get; set; }
+        private string userId { get; set; }
         private double latitude { get; set; }
         private double longitude { get; set; }
     }
 
-    class conversation
+    class Conversation
     {
-        private int userId { get; set; }
-        private List<string> messages { get; }
+        private string userId { get; set; }
+        private List<Message> messages { get; }
 
-        public void addMessage(string message) {
+        public void addMessage(Message message) {
             messages.Add(message);
         }
+    }
+
+    class Message
+    {
+        private string senderId { get; set; }
+        private string receiverId { get; set; }
+        private string text;
     }
 }
