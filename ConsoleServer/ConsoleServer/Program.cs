@@ -72,35 +72,19 @@ namespace ConsoleServer
 		public void AddMessage(string name, string message)
 		{
 			Console.WriteLine("Hub AddMessage {0} {1}\n", name, message);
-			Clients.All.addMessage(name, message);
-			for (int i = 0; i < Context.Headers.Count(); i++)
-			{
-				Console.WriteLine(Context.Headers.ToList()[i]);
-			}
+			Clients.All.addMessageDoei(name, message);
+			Heartbeat();
 		}
 
 		public void Heartbeat()
 		{
-			//Console.WriteLine("Hub Heartbeat\n");
-			//Clients.All.heartbeat();
-			//for (int i = 0; i < Context.Request.Environment.Count(); i++)
-			//{
-			//	Console.WriteLine(Context.Request.Environment.ToList()[i]);
-			//}
+			Clients.All.heartbeat();
 		}
 
 		public void SendHelloObject(HelloModel hello)
 		{
 			Console.WriteLine("Hub hello {0} {1}\n", hello.Molly, hello.Age);
-			
-			
-		
-			Clients.All.sendHelloObject(hello);
-
-			//for (int i = 0; i < Context.Headers.Count(); i++)
-			//{
-			//	Console.WriteLine(Context.Headers.ToList()[i]);
-			//}
+			AddMessage("Doei", "Goeie dag");
 		}
 
 		public override Task OnConnected()

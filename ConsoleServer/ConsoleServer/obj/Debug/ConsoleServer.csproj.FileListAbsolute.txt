@@ -58,3 +58,9 @@ C:\Users\Sander\Desktop\Windows Phone\ConsoleServer\ConsoleServer\bin\Debug\Sign
 C:\Users\Sander\Desktop\Windows Phone\ConsoleServer\ConsoleServer\bin\Debug\SignalR.Hosting.Common.xml
 C:\Users\Sander\Desktop\Windows Phone\ConsoleServer\ConsoleServer\bin\Debug\SignalR.Hosting.Self.xml
 C:\Users\Sander\Desktop\Windows Phone\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.csprojResolveAssemblyReference.cache
+Z:\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe.config
+Z:\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.exe
+Z:\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.pdb
+\\vmware-host\Shared Folders\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe.config
+\\vmware-host\Shared Folders\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.exe
+\\vmware-host\Shared Folders\Desktop\WindowsPhoneProject-SignalR\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.pdb

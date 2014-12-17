@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNet.SignalR.Client.Http;
+using Microsoft.AspNet.SignalR.Client.Transports;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,14 +45,23 @@ namespace WPSignalR
 			//Make proxy to hub based on hub name on server
 
 			IHubProxy myHubProxy = hubConnection.CreateHubProxy("MyHub");
-			myHubProxy.On<string, string>("addMessage", (name, message) => Debug.WriteLine("Recieved addMessage: " + name + ": " + message + "\n"));
-			myHubProxy.On("heartbeat", () => Debug.WriteLine("Recieved heartbeat \n"));
+			myHubProxy.On<string, string>("addMessageDoei", (name, message) => Debug.WriteLine("Recieved addMessage: " + name + ": " + message + "\n"));
+			//myHubProxy.On("heartbeat", () => Debug.WriteLine("Recieved heartbeat \n"));
 			myHubProxy.On<HelloModel>("sendHelloObject", hello => Debug.WriteLine("Recieved sendHelloObject {0}, {1} \n", hello.Molly, hello.Age));
 
 			//WebSocketTransport transport = new WebSocketTransport();
 			//Start connection
 			//IClientTransport transport = new 
-			hubConnection.Start().ContinueWith(task =>
+			var httpClient = new DefaultHttpClient();
+
+
+
+			hubConnection.Start(new AutoTransport(httpClient, 
+    new IClientTransport[] 
+    { 
+		new LongPollingTransport(httpClient),
+		new AutoTransport(httpClient)
+    })).ContinueWith(task =>
 			{
 				if (task.IsFaulted)
 				{
@@ -64,6 +75,9 @@ namespace WPSignalR
 				}
 
 			}).Wait();
+
+			myHubProxy.On("heartbeat", () => Debug.WriteLine("Recieved heartbeat \n"));
+
 			HelloModel modelModel = new HelloModel();
 			modelModel.Age = 15;
 			modelModel.Molly = "Test";
@@ -73,6 +87,11 @@ namespace WPSignalR
 
 			});
 
+
+			myHubProxy.On<string, string>("addMessageDoei", (name, message) => 
+				Debug.WriteLine("Recieved addMessage Test: " + name + ": " + message + "\n"));
+	
+
 			myHubProxy.Invoke("addMessage", "client message", " sent from console client").ContinueWith(task =>
 			{
 				if (task.IsFaulted)
@@ -81,21 +100,6 @@ namespace WPSignalR
 				}
 
 			}).Wait();
-
-			for (int i = 0; i < 2; i++)
-			{
-
-				myHubProxy.Invoke("Heartbeat").ContinueWith(task =>
-				{
-					if (task.IsFaulted)
-					{
-						Debug.WriteLine("There was an error opening the connection:{0}", task.Exception.GetBaseException());
-					}
-
-				}).Wait(1000);
-				Debug.WriteLine("client heartbeat sent to server\n");
-
-			}
         }
 
 		public class HelloModel
