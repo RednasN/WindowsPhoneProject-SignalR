@@ -1,0 +1,8 @@
+<XamlCompilerSaveState>
+  <ReferenceAssemblyList>
+    <LocalAssembly PathName="c:\users\sander\desktop\windows phone\wpsignalr\wpsignalr\obj\debug\intermediatexaml\wpsignalr.exe" HashGuid="f31dfdfa-664b-9a73-5c9b-fbd0596bbee0" />
+    <ReferenceAssembly PathName="c:\users\sander\desktop\windows phone\wpsignalr\packages\microsoft.aspnet.signalr.client.2.1.2\lib\portable-net45+sl5+netcore45+wp8+wp81+wpa81\microsoft.aspnet.signalr.client.dll" HashGuid="f8125746-d551-5a4d-f707-b9c4c8ed208b" />
+    <ReferenceAssembly PathName="c:\users\sander\desktop\windows phone\wpsignalr\packages\newtonsoft.json.6.0.4\lib\portable-net45+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="02b12ba6-881e-6b8a-1687-5b2ee1851a11" />
+    <ReferenceAssembly PathName="c:\users\sander\desktop\windows phone\wpsignalr\packages\microsoft.net.http.2.2.19\lib\wpa81\system.net.http.extensions.dll" HashGuid="1d9d21be-6daa-468f-1b93-4e738d786e1b" />
+  </ReferenceAssemblyList>
+</XamlCompilerSaveState>
