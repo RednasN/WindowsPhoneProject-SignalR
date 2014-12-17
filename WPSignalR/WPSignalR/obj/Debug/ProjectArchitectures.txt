@@ -1,1 +1,1 @@
-C:\Users\Sander\Desktop\Windows Phone\WPSignalR\WPSignalR\WPSignalR.csproj;neutral
+\\vmware-host\Shared Folders\Desktop\WindowsPhoneProject-SignalR\WPSignalR\WPSignalR\WPSignalR.csproj;neutral

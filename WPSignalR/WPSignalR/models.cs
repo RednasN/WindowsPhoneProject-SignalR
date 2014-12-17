@@ -13,7 +13,7 @@ namespace WPSignalR
     class Conversation
     {
         private string userId { get; set; }
-        private List<Message> messages { get; }
+		private List<Message> messages { get; set; }
 
         public void addMessage(Message message) {
             messages.Add(message);
