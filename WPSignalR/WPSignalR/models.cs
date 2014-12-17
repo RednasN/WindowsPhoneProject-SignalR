@@ -12,8 +12,8 @@ namespace WPSignalR
 
     public class Conversation
     {
-        public string userId { get; set; }
-        public List<Message> messages { get; private set; }
+        private string userId { get; set; }
+		private List<Message> messages { get; set; }
 
         public void addMessage(Message message) {
             messages.Add(message);
