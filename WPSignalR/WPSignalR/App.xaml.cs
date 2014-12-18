@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -31,6 +32,14 @@ namespace WPSignalR
     {
 
         private TransitionCollection transitions;
+        private HubConnection hubConnection;
+        private Task locationSender;
+        const string serverIp = "172.16.142.131";
+        const string serverPort = "8080";
+        const int sendLocationDelay = 5000;
+
+        private string userId;
+        private List<Conversation> conversations;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -41,73 +50,91 @@ namespace WPSignalR
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
-			var hubConnection = new HubConnection("http://172.16.142.131:8080/");
-			//Make proxy to hub based on hub name on server
-
-			IHubProxy myHubProxy = hubConnection.CreateHubProxy("MyHub");
-			myHubProxy.On<string, string>("addMessageDoei", (name, message) => Debug.WriteLine("Recieved addMessage: " + name + ": " + message + "\n"));
-			//myHubProxy.On("heartbeat", () => Debug.WriteLine("Recieved heartbeat \n"));
-			myHubProxy.On<HelloModel>("sendHelloObject", hello => Debug.WriteLine("Recieved sendHelloObject {0}, {1} \n", hello.Molly, hello.Age));
-
-			//WebSocketTransport transport = new WebSocketTransport();
-			//Start connection
-			//IClientTransport transport = new 
-			var httpClient = new DefaultHttpClient();
-
-
-
-			hubConnection.Start(new AutoTransport(httpClient, 
-    new IClientTransport[] 
-    { 
-		new LongPollingTransport(httpClient),
-		new AutoTransport(httpClient)
-    })).ContinueWith(task =>
-			{
-				if (task.IsFaulted)
-				{
-
-					Debug.WriteLine("There was an error opening the connection:{0}",
-									  task.Exception.GetBaseException());
-				}
-				else
-				{
-					//Console.WriteLine("Connected");
-				}
-
-			}).Wait();
-
-			myHubProxy.On("heartbeat", () => Debug.WriteLine("Recieved heartbeat \n"));
-
-			HelloModel modelModel = new HelloModel();
-			modelModel.Age = 15;
-			modelModel.Molly = "Test";
-
-			myHubProxy.Invoke("sendHelloObject", modelModel).ContinueWith(task =>
-			{
-
-			});
-
-
-			myHubProxy.On<string, string>("addMessageDoei", (name, message) => 
-				Debug.WriteLine("Recieved addMessage Test: " + name + ": " + message + "\n"));
-	
-
-			myHubProxy.Invoke("addMessage", "client message", " sent from console client").ContinueWith(task =>
-			{
-				if (task.IsFaulted)
-				{
-					Debug.WriteLine("!!! There was an error opening the connection:{0} \n", task.Exception.GetBaseException());
-				}
-
-			}).Wait();
+            this.start();
         }
 
-		public class HelloModel
-		{
-			public string Molly { get; set; }
+        private void start()
+        {
 
-			public int Age { get; set; }
-		}
+            hubConnection = new HubConnection("http://" + serverIp + ":" + serverPort + "/");
+
+            // Make a HubProxy to define methods on this client which then can be called by the server
+            IHubProxy myHubProxy = hubConnection.CreateHubProxy("MyHub");
+
+            // Define methods that can be called by the server
+            // Save a message upon receiving one
+            myHubProxy.On<Message>("sendMessage", (message) => saveMessage(message));
+
+            var httpClient = new DefaultHttpClient();
+
+            // Capture ConnectionState changes
+            hubConnection.StateChanged += (change) =>
+            {
+                switch (change.NewState)
+                {
+                    case ConnectionState.Connected:
+                        // Start the SendLocation task
+                        locationSender = Task_SendLocationAync();
+                        break;
+                    default:
+                        // If the client is no longer connected to the server..
+                        break;
+                }
+            };
+
+            hubConnection.Start();
+        }
+
+        public static int convertStringToInt32(string text)
+        {
+            int output;
+            if (Int32.TryParse(text, out output))
+            {
+                return output;
+            }
+            else
+            {
+                throw new Exception("Unable to convert string to int!");
+            }
+        }
+
+        private void saveMessage(Message message)
+        {
+            try
+            {
+                int senderId = convertStringToInt32(message.senderId);
+                if (conversations[senderId] == null)
+                {
+                    conversations[senderId] = new Conversation(message.senderId);
+                }
+                conversations[senderId].addMessage(message);
+            }
+            catch
+            {
+                // @TODO: Do some proper logging.
+            }
+        }
+
+        private async Task Task_SendLocationAync()
+        {
+            while (hubConnection.State == ConnectionState.Connected)
+            {
+                await Task.Delay(sendLocationDelay);
+                await Task.Run(() =>
+                {
+                    // send location data
+                    Debug.WriteLine("sending locationdata..");
+                    hubConnection.Send(getCurrentLocation());
+                });
+            }
+        }
+
+        private Location getCurrentLocation()
+        {
+            Location location = new Location(this.userId, -52.1234, 12.1234);
+            // @TODO: get current device location and add latitude and longitude here.
+            return location;
+        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
