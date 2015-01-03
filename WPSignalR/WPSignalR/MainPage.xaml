@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <TextBlock x:Name="lbl_Status" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Text="Connected"></TextBlock>
     </Grid>
 </Page>
