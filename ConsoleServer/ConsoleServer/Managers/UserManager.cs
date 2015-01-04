@@ -14,17 +14,17 @@ namespace ConsoleServer.Managers
 
 		public List<User> getAvailableUsers(User currentUser)
 		{
-			List<User> availableUsers = new List<User>();
+			List<User> chatUsers = new List<User>();
 
 			foreach(User user in availableUsers.Where( x => x.userId != currentUser.userId && x.lastLocation != null))
 			{
 				if(distanceManager.getDistanceInKilometers(currentUser.lastLocation.latitude, currentUser.lastLocation.longitude,
 															user.lastLocation.latitude, currentUser.lastLocation.longitude) < 1)
 				{
-					availableUsers.Add(user);
+					chatUsers.Add(user);
 				}
 			}
-			return availableUsers;
+			return chatUsers;
 		}
 
 		public void updateLocation(Location location, string userId)
@@ -53,5 +53,18 @@ namespace ConsoleServer.Managers
 		{
 			availableUsers.Add(newUser);
 		}
+
+		static UserManager userManager;
+		public static UserManager getUserManager()
+		{
+			if(userManager == null)
+			{
+				userManager = new UserManager();
+				
+			}
+			return userManager;
+		}
+		
+
 	}
 }

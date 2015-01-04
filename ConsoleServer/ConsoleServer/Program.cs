@@ -81,7 +81,7 @@ namespace ConsoleServer
 	}
 	public class MyHub : Hub
 	{
-		UserManager userManager = new UserManager();
+		UserManager userManager = UserManager.getUserManager();
 
 
 
@@ -123,6 +123,11 @@ namespace ConsoleServer
 		public override Task OnConnected()
 		{
 			Console.WriteLine("Hub OnConnected {0}\n", Context.ConnectionId);
+
+			User newUser = new User();
+			newUser.userId = Context.ConnectionId;
+			userManager.addUser(newUser);
+
 			return (base.OnConnected());
 		}		
 

@@ -71,6 +71,9 @@ namespace WPSignalR
 			myHubProxy.On<Location>("jeMoeder", hello => Debug.WriteLine("Recieved je moeder location {0}, {1} \n", hello.userId, hello.latitude));
 
 
+			myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
+
+
 			//myHubProxy.On<Location>("sendLocation", (location) => sendLocation(location));
 
 			var httpClient = new DefaultHttpClient();
