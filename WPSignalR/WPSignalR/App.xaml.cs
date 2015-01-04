@@ -53,6 +53,7 @@ namespace WPSignalR
             this.start();
         }
 
+		Boolean connected = false;
 		IHubProxy myHubProxy;
 		private void start()
 		{
@@ -70,8 +71,8 @@ namespace WPSignalR
 
 			myHubProxy.On<Location>("jeMoeder", hello => Debug.WriteLine("Recieved je moeder location {0}, {1} \n", hello.userId, hello.latitude));
 
+			
 
-			myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
 
 
 			//myHubProxy.On<Location>("sendLocation", (location) => sendLocation(location));
@@ -86,7 +87,8 @@ namespace WPSignalR
 					case ConnectionState.Connected:
 						// Start the SendLocation task
 						// locationSender = Task_SendLocationAync();
-						sendLocation();
+						//
+						connected = true;
 						break;
 					default:
 						// If the client is no longer connected to the server..
@@ -100,6 +102,17 @@ namespace WPSignalR
 				new LongPollingTransport(httpClient),
 				new AutoTransport(httpClient)
 			}));
+
+
+			while (!connected)
+			{
+
+			}
+			myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
+
+
+			sendLocation();
+
 
 		}
 
