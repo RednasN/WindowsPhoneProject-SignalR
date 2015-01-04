@@ -1,4 +1,5 @@
 ﻿
+using ConsoleServer.Managers;
 using ConsoleServer.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -80,6 +81,10 @@ namespace ConsoleServer
 	}
 	public class MyHub : Hub
 	{
+		UserManager userManager = new UserManager();
+
+
+
 		public void AddMessage(string name, string message)
 		{
 			Console.WriteLine("Hub AddMessage {0} {1}\n", name, message);
@@ -87,11 +92,20 @@ namespace ConsoleServer
 			Heartbeat();
 		}
 
+		/// <summary>
+		/// Updates the location of a specific user.
+		/// </summary>
+		/// <param name="location">Location of the user.</param>
 		public void SendLocation(Location location)
-		{
-			//Received !! :) 
+		{			
+			userManager.updateLocation(location, Context.ConnectionId);
 
-			Clients.Client(Context.ConnectionId).JeMoeder(location);
+			User currentUser = userManager.getUserById(Context.ConnectionId);
+
+			if(currentUser != null)
+			{
+				Clients.Caller.GetAvailableClients(userManager.getAvailableUsers(currentUser));
+			}
 		}
 
 
