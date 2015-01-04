@@ -1,4 +1,5 @@
 ﻿
+using ConsoleServer.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin.Cors;
@@ -22,6 +23,8 @@ namespace ConsoleServer
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
 			string url = "http://172.16.142.131:8080";
+
+			//169.254.80.80
 			using (WebApp.Start(url))
 			{
 				Console.WriteLine("Server running on {0}", url);
@@ -37,7 +40,15 @@ namespace ConsoleServer
 					if (key.ToUpper() == "E")
 					{
 						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-						hubContext.Clients.All.heartbeat();
+						//hubContext.Clients.All.heartbeat();
+
+						Location location = new Location();
+						location.latitude = 1;
+						location.latitude = 2;
+						location.userId = "Je moedertje";
+
+						hubContext.Clients.All.JeMoeder(location);
+
 						Console.WriteLine("Server Sending heartbeat\n");
 					}
 					if (key.ToUpper() == "R")
@@ -75,6 +86,14 @@ namespace ConsoleServer
 			Clients.All.addMessageDoei(name, message);
 			Heartbeat();
 		}
+
+		public void SendLocation(Location location)
+		{
+			//Received !! :) 
+
+			Clients.Client(Context.ConnectionId).JeMoeder(location);
+		}
+
 
 		public void Heartbeat()
 		{
