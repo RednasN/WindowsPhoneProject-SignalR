@@ -37,6 +37,15 @@ namespace ConsoleServer.Managers
 			}
 		}
 
+		public void deleteUser(String connectionId)
+		{
+			int userIndex = availableUsers.FindIndex(x => x.userId == connectionId);
+			if(userIndex != -1)
+			{
+				availableUsers.RemoveAt(userIndex);
+			}
+		}
+
 		public User getUserById(String connectionId)
 		{
 			return availableUsers.Find(x => x.userId == connectionId);
@@ -48,7 +57,7 @@ namespace ConsoleServer.Managers
 			user.userId = userId;
 			availableUsers.Add(user);
 		}
-		
+
 		public void addUser(User newUser)
 		{
 			availableUsers.Add(newUser);
@@ -59,8 +68,7 @@ namespace ConsoleServer.Managers
 		{
 			if(userManager == null)
 			{
-				userManager = new UserManager();
-				
+				userManager = new UserManager();				
 			}
 			return userManager;
 		}

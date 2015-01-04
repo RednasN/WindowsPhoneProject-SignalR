@@ -108,6 +108,19 @@ namespace ConsoleServer
 			}
 		}
 
+		/// <summary>
+		/// Sends a message to another user.
+		/// </summary>
+		/// <param name="newMessage">Message from user.</param>
+		public void SendMessage(Message newMessage)
+		{
+			User currentUser = userManager.getUserById(newMessage.receiverId);			
+			if(currentUser != null)
+			{
+				Clients.Client(newMessage.receiverId).SendMessage(newMessage);
+			}
+		}
+
 
 		public void Heartbeat()
 		{
@@ -135,6 +148,16 @@ namespace ConsoleServer
 		{
 			Console.WriteLine("Hub OnReconnected {0}\n", Context.ConnectionId);
 			return (base.OnDisconnected(true));
+		}
+
+		public override Task OnDisconnected(bool stopCalled)
+		{
+			Console.WriteLine("Hub OnDisconnected {0}\n", Context.ConnectionId);
+
+			//userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
+
+			
+			return base.OnDisconnected(stopCalled);
 		}
 	}
 
