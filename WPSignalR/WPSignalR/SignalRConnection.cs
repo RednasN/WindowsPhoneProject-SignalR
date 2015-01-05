@@ -50,7 +50,7 @@ namespace WPSignalR
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.134";
+        const string serverIp = "192.168.1.143";
         const string serverPort = "8080";
         const int sendLocationDelay = 5000;
         Boolean connected = false;
@@ -130,6 +130,14 @@ namespace WPSignalR
 
         public void sendMessage(Message message)
         {
+			List<Conversation> list = conversations.ToList<Conversation>();
+
+			int conversationIndex = list.FindIndex(x => x.userId == message.receiverId);
+
+			if(conversationIndex != -1)
+			{
+				conversations[conversationIndex].addMessage(message);
+			}
             myHubProxy.Invoke("sendMessage", message);
         }
 
