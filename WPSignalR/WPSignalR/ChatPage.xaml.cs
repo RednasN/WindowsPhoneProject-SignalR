@@ -71,8 +71,7 @@ namespace WPSignalR
         {
             connection.sendMessage(new Message(
                 connection.getMyUserId(),
-                connection.getMyUserId(), 
-                //conversation.getUserId(),
+                conversation.userId,
                 txt_Message.Text)
             );
             txt_Message.Text = "";

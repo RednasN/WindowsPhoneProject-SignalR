@@ -30,10 +30,7 @@ namespace WPSignalR
         {
             this.userId = userId;
         }
-        private string userId;
-        public string getUserId() {
-            return this.userId;
-        }
+        public string userId { get; set; }
         private ObservableCollection<Message> _messages = new ObservableCollection<Message>();
         public ObservableCollection<Message> messages
         {
