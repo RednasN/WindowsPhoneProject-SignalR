@@ -1,19 +1,8 @@
-﻿using Microsoft.AspNet.SignalR.Client;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace WPSignalR
@@ -29,16 +18,6 @@ namespace WPSignalR
         public ChatPage()
         {
             this.InitializeComponent();
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-        }
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                rootFrame.GoBack();
-                e.Handled = true;
-            }
         }
 
         /// <summary>
@@ -48,17 +27,28 @@ namespace WPSignalR
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+
             connection = SignalRConnection.Instance;
 
-            List<Conversation> list = connection.getConversations().ToList<Conversation>();
+            List<Conversation> list = connection.conversations.ToList<Conversation>();
             int conversationIndex = list.FindIndex(x => x.userId == (string)e.Parameter);
 
             if (conversationIndex >= 0)
             {
-                conversation = connection.getConversations()[conversationIndex];
+                conversation = connection.conversations[conversationIndex];
 
-                lbl_ContactName.Text = conversation.userId;
+                lbl_PageName.Text = conversation.userId;
                 this.DataContext = conversation;
+            }
+        }
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+                e.Handled = true;
             }
         }
 

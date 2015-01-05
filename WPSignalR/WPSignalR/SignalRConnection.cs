@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
@@ -44,13 +43,13 @@ namespace WPSignalR
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine("Unable to add conversation to the Collection in SignalRConnection, Exception message: " + ex.Message.ToString());
             }
 			NotifyPropertyChanged("conversations");
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.143";
+        const string serverIp = "192.168.192.37";
         const string serverPort = "8080";
         const int sendLocationDelay = 5000;
         Boolean connected = false;
@@ -222,12 +221,6 @@ namespace WPSignalR
             Location location = new Location(this.userId, -52.1234, 12.1234);
             // @TODO: get current device location and add latitude and longitude here.
             return location;
-        }
-
-
-        public ObservableCollection<Conversation> getConversations()
-        {
-            return conversations;
         }
     }
 }
