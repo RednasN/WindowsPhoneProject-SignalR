@@ -30,7 +30,7 @@
         <TextBlock x:Name="lbl_ContactName" Grid.Column="0" Grid.Row="0" FontSize="36" Text="[name]" />
         <TextBlock x:Name="lbl_ContactDistance" Grid.Column="2" Grid.Row="0" FontSize="18" Text="&lt; 1km" Margin="0 16 0 0" TextAlignment="Right" />
 
-        <ListView HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
+        <ListView ItemsSource="{Binding messages}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel HorizontalAlignment="Stretch" Margin="0">
