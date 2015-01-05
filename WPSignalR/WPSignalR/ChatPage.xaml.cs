@@ -13,18 +13,26 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
-
 namespace WPSignalR
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class BlankPage1 : Page
+    public sealed partial class ChatPage : Page
     {
-        public BlankPage1()
+        public ChatPage()
         {
             this.InitializeComponent();
+
+            Conversation conversation = new Conversation("Hendrik");
+            conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
+            conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
+
+            lbl_ContactName.Text = conversation.getUserId();
+            lst_Messages.ItemsSource = conversation.getMessages();
         }
 
         /// <summary>
@@ -34,6 +42,29 @@ namespace WPSignalR
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+        }
+
+        /// <summary>
+        /// Sends the typed message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">Event data that describes how this event was triggered.</param>
+        private void btn_Send_Click(object sender, RoutedEventArgs e)
+        {
+            //connectionManager.sendMessage(txt_Message.Text);
+            txt_Message.Text = "";
+        }
+
+        /// <summary>
+        /// Resets the text if delivery failed and user didn't type anything new.
+        /// </summary>
+        /// <param name="text">The message that failed to be delivered.</param>
+        public void sendMessageFailed(string text)
+        {
+            if (txt_Message.Text.Equals(""))
+            {
+                txt_Message.Text = text;
+            }
         }
     }
 }

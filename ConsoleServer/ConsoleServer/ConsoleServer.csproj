@@ -82,12 +82,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Managers\ChatManager.cs" />
-    <Compile Include="Managers\DistanceManager.cs" />
-    <Compile Include="Managers\UserManager.cs" />
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\Message.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
