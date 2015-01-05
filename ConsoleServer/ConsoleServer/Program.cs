@@ -43,10 +43,7 @@ namespace ConsoleServer
 						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
 						//hubContext.Clients.All.heartbeat();
 
-						Location location = new Location();
-						location.latitude = 1;
-						location.latitude = 2;
-						location.userId = "Je moedertje";
+						Location location = new Location("Je moedertje", 1, 2);
 
 						hubContext.Clients.All.JeMoeder(location);
 
@@ -138,8 +135,7 @@ namespace ConsoleServer
 		{
 			Console.WriteLine("Hub OnConnected {0}\n", Context.ConnectionId);
 
-			User newUser = new User();
-			newUser.userId = Context.ConnectionId;
+            User newUser = new User(Context.ConnectionId);
 			userManager.addUser(newUser);
 
 			return (base.OnConnected());

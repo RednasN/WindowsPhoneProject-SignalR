@@ -53,8 +53,7 @@ namespace ConsoleServer.Managers
 
 		public void addUser(String userId)
 		{
-			User user = new User();
-			user.userId = userId;
+			User user = new User(userId);
 			availableUsers.Add(user);
 		}
 
