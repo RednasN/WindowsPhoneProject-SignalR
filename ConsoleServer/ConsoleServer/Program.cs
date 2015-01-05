@@ -8,10 +8,12 @@ using Microsoft.Owin.Hosting;
 using Owin;
 using SignalR.Hosting.Self;
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace ConsoleServer
 {
@@ -23,7 +25,8 @@ namespace ConsoleServer
 			// use http://*:8080 to bind to all addresses. 
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
-			string url = "http://192.168.1.134:8080";
+
+            string url = "http://" + getMyLocalIP() + ":8080"; 
 
 			//169.254.80.80
 			using (WebApp.Start(url))
@@ -70,6 +73,22 @@ namespace ConsoleServer
 				Console.ReadLine();
 			}
 		}
+
+        private static string getMyLocalIP()
+        {
+            // Determine your ip
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
+        }
 	}
 	class Startup
 	{
@@ -81,9 +100,7 @@ namespace ConsoleServer
 	}
 	public class MyHub : Hub
 	{
-		UserManager userManager = UserManager.getUserManager();
-
-
+        UserManager userManager = UserManager.getUserManager();
 
 		public void AddMessage(string name, string message)
 		{
@@ -114,6 +131,7 @@ namespace ConsoleServer
 		/// <param name="newMessage">Message from user.</param>
 		public void SendMessage(Message newMessage)
 		{
+            Console.WriteLine("Message sent to "+ newMessage.receiverId +": '"+ newMessage.text +"'\n");
 			User currentUser = userManager.getUserById(newMessage.receiverId);			
 			if(currentUser != null)
 			{
