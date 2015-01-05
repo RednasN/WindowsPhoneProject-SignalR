@@ -22,11 +22,22 @@ namespace WPSignalR
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        SignalRConnection connection;
         public MainPage()
         {
             this.InitializeComponent();
+            
+            try
+            {
+                connection = SignalRConnection.Instance;
+                lbl_Status.Text = "connected";
 
-            this.NavigationCacheMode = NavigationCacheMode.Required;
+                this.DataContext = connection;
+            }
+            catch
+            {
+                // @TODO: Do some proper logging.
+            }
         }
 
         /// <summary>
@@ -43,6 +54,11 @@ namespace WPSignalR
             // Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
             // If you are using the NavigationHelper provided by some templates,
             // this event is handled for you.
+        }
+
+        private void lst_Messages_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(ChatPage), ((Conversation)e.ClickedItem).userId);
         }
     }
 }

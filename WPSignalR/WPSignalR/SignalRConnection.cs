@@ -7,13 +7,47 @@ using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
 using Microsoft.AspNet.SignalR.Client.Transports;
 using System.Diagnostics;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
 
 namespace WPSignalR
 {
-    public class SignalRConnection : IConnection
+    public class SignalRConnection : IConnection, INotifyPropertyChanged
     {
         private string userId;
-        public ConversationCollection conversations;
+
+        private ObservableCollection<Conversation> _conversations = new ObservableCollection<Conversation>();
+        public ObservableCollection<Conversation> conversations
+        {
+            get
+            {
+                return this._conversations;
+            }
+            set
+            {
+                this._conversations = value;
+                NotifyPropertyChanged("conversations");
+            }
+        }
+
+        public async void AddConversation(Conversation newConversation)
+		{
+            try
+            {
+                CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    this._conversations.Add(newConversation);
+                });
+            }
+            catch (Exception ex)
+            {
+
+            }
+			NotifyPropertyChanged("conversations");
+		}
         private HubConnection hubConnection;
         private Task locationSender;
         const string serverIp = "192.168.1.134";
@@ -38,8 +72,6 @@ namespace WPSignalR
 
         private void start()
         {
-            conversations = new ConversationCollection();
-
             hubConnection = new HubConnection("http://" + serverIp + ":" + serverPort + "/");
 
             // Make a HubProxy to define methods on this client which then can be called by the server
@@ -48,12 +80,6 @@ namespace WPSignalR
             // Define methods that can be called by the server
             // Save a message upon receiving one
             myHubProxy.On<Message>("sendMessageToUser", (message) => saveMessage(message));
-
-            //myHubProxy.On<Location>("sendHelloObject", hello => OnSendData(""));
-
-            myHubProxy.On<Location>("jeMoeder", hello => Debug.WriteLine("Recieved je moeder location {0}, {1} \n", hello.userId, hello.latitude));
-
-            //myHubProxy.On<Location>("sendLocation", (location) => sendLocation(location));
 
             var httpClient = new DefaultHttpClient();
 
@@ -85,9 +111,21 @@ namespace WPSignalR
             {
 
             }
-            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
+            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
 
             sendLocation();
+        }
+
+        private void startConversations(List<User> availableUsers)
+        {
+            List<Conversation> list = conversations.ToList<Conversation>();
+            foreach (User user in availableUsers)
+            {
+                int conversationIndex = list.FindIndex(x => x.userId == user.userId);
+                if (conversationIndex == -1) {
+                    AddConversation(new Conversation(user.userId));
+                }
+            }
         }
 
         public void sendMessage(Message message)
@@ -124,22 +162,36 @@ namespace WPSignalR
             try
             {
                 List<Conversation> list = conversations.ToList<Conversation>();
-                int conversationIndex = list.FindIndex(x => x.getUserId() == message.senderId);
+                int conversationIndex = list.FindIndex(x => x.userId == message.senderId);
                 if (conversationIndex == -1)
                 {
                     Conversation conversation = new Conversation(message.senderId);
                     conversation.addMessage(message);
-                    conversations.Add(conversation);   
+                    conversations.Add(conversation);
+                    NotifyPropertyChanged("conversations");
                 }
                 else
                 {
-                    conversations[0].addMessage(message);
+                    conversations[conversationIndex].addMessage(message);
                 }
             }
-            catch(Exception ex)
+            catch
             {
-
                 // @TODO: Do some proper logging.
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected async void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                });
             }
         }
 
@@ -165,7 +217,7 @@ namespace WPSignalR
         }
 
 
-        public ConversationCollection getConversations()
+        public ObservableCollection<Conversation> getConversations()
         {
             return conversations;
         }
