@@ -1,9 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Windows.UI.Xaml;
+using System.ComponentModel;
 
 namespace WPSignalR
 {
+
+    public class ConversationCollection : ObservableCollection<Conversation>
+    {
+        public ConversationCollection() : base()
+        {
+            Conversation conversation = new Conversation("Hendrik");
+            conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
+            conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
+            conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
+            Add(conversation);
+        }
+    }
+
     public class Location
     {
         public Location(string userId, double latitude, double longitude)
@@ -17,7 +35,7 @@ namespace WPSignalR
         public double longitude { get; set; }
     }
 
-    public class Conversation
+    public class Conversation : INotifyPropertyChanged
     {
         public Conversation(string userId)
         {
@@ -27,11 +45,20 @@ namespace WPSignalR
         public string getUserId() {
             return this.userId;
         }
-        private List<Message> messages = new List<Message>();
-        public List<Message> getMessages()
+        private ObservableCollection<Message> _messages = new ObservableCollection<Message>();
+        public ObservableCollection<Message> messages
         {
-            return this.messages;
+            get {
+                return this._messages;
+            }
+            set
+            {
+                this._messages = value;
+                NotifyPropertyChanged("messages");
+            }            
         }
+
+
         public void addMessage(Message message) {
             if (message.senderId == this.userId)
             {
@@ -41,8 +68,19 @@ namespace WPSignalR
             {
                 message.position = Message.Position.Left;
             }
-            this.messages.Add(message);
+
+            this._messages.Add(message);
+            NotifyPropertyChanged("messages");
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+        
     }
 
 	public class User
@@ -59,6 +97,7 @@ namespace WPSignalR
             this.receiverId = receiverId;
             this.text = text;
         }
+
         public enum Position
         {
             Left,

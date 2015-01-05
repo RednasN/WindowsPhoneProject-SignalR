@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR.Client;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,19 +22,21 @@ namespace WPSignalR
     /// </summary>
     public sealed partial class ChatPage : Page
     {
+        IConnection connection;
+        Conversation conversation;
+
         public ChatPage()
         {
             this.InitializeComponent();
+            connection = SignalRConnection.Instance;
 
-            Conversation conversation = new Conversation("Hendrik");
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
+            conversation = connection.getConversations()[0];
 
             lbl_ContactName.Text = conversation.getUserId();
-            lst_Messages.ItemsSource = conversation.getMessages();
+            this.DataContext = conversation;
+            //lst_Messages.ItemsSource = conversation.messages;
+
+            conversation.addMessage(new Message("test", "test", "test"));
         }
 
         /// <summary>
@@ -51,7 +55,12 @@ namespace WPSignalR
         /// <param name="e">Event data that describes how this event was triggered.</param>
         private void btn_Send_Click(object sender, RoutedEventArgs e)
         {
-            //connectionManager.sendMessage(txt_Message.Text);
+            connection.sendMessage(new Message(
+                connection.getMyUserId(),
+                connection.getMyUserId(), 
+                //conversation.getUserId(),
+                txt_Message.Text)
+            );
             txt_Message.Text = "";
         }
 
