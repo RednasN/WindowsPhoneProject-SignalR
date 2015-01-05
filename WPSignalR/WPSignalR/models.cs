@@ -23,14 +23,14 @@ namespace WPSignalR
 
     public class Conversation : INotifyPropertyChanged
     {
-        public Conversation(string userId)
+		public Conversation(string newUserId)
         {
-            this.userId = userId;
+            this.userId = newUserId;
         }
-        private string userId;
-        public string getUserId() {
-            return this.userId;
-        }
+
+
+        public string userId {get; set;}
+
         private ObservableCollection<Message> _messages = new ObservableCollection<Message>();
         public ObservableCollection<Message> messages
         {

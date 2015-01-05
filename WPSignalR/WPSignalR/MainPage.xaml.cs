@@ -22,7 +22,7 @@ namespace WPSignalR
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private SignalRConnection connection;
+        SignalRConnection connection;
         public MainPage()
         {
             this.InitializeComponent();
@@ -35,6 +35,9 @@ namespace WPSignalR
                 lbl_Status.Text = "connected";
 
                 this.DataContext = connection;
+
+				Conversation conversation = new Conversation("Test");
+				connection.AddConversation(conversation);
             }
             catch
             {

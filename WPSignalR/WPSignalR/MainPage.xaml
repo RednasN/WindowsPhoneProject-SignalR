@@ -25,7 +25,7 @@
             <ListView ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding userId}" />
+						<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding userId}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>

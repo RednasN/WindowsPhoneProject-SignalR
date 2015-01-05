@@ -32,7 +32,7 @@ namespace WPSignalR
 
             conversation = connection.getConversations()[0];
 
-            lbl_ContactName.Text = conversation.getUserId();
+            lbl_ContactName.Text = conversation.userId;
             this.DataContext = conversation;
             //lst_Messages.ItemsSource = conversation.messages;
 

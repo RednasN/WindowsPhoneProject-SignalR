@@ -29,6 +29,12 @@ namespace WPSignalR
                 NotifyPropertyChanged("conversations");
             }
         }
+
+		public void AddConversation(Conversation newConversation)
+		{
+			this._conversations.Add(newConversation);
+			NotifyPropertyChanged("conversations");
+		}
         private HubConnection hubConnection;
         private Task locationSender;
         const string serverIp = "192.168.1.134";
@@ -137,7 +143,7 @@ namespace WPSignalR
             try
             {
                 List<Conversation> list = conversations.ToList<Conversation>();
-                int conversationIndex = list.FindIndex(x => x.getUserId() == message.senderId);
+                int conversationIndex = list.FindIndex(x => x.userId == message.senderId);
                 if (conversationIndex == -1)
                 {
                     Conversation conversation = new Conversation(message.senderId);
