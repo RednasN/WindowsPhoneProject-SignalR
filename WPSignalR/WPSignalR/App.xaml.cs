@@ -53,37 +53,76 @@ namespace WPSignalR
             this.start();
         }
 
-        private void start()
-        {
+		Boolean connected = false;
+		IHubProxy myHubProxy;
+		private void start()
+		{
 
-            hubConnection = new HubConnection("http://" + serverIp + ":" + serverPort + "/");
+			hubConnection = new HubConnection("http://" + serverIp + ":" + serverPort + "/");
 
-            // Make a HubProxy to define methods on this client which then can be called by the server
-            IHubProxy myHubProxy = hubConnection.CreateHubProxy("MyHub");
+			// Make a HubProxy to define methods on this client which then can be called by the server
+			myHubProxy = hubConnection.CreateHubProxy("MyHub");
 
-            // Define methods that can be called by the server
-            // Save a message upon receiving one
-            myHubProxy.On<Message>("sendMessage", (message) => saveMessage(message));
+			// Define methods that can be called by the server
+			// Save a message upon receiving one
+			myHubProxy.On<Message>("sendMessage", (message) => saveMessage(message));
 
-            var httpClient = new DefaultHttpClient();
+			//myHubProxy.On<Location>("sendHelloObject", hello => OnSendData(""));
 
-            // Capture ConnectionState changes
-            hubConnection.StateChanged += (change) =>
-            {
-                switch (change.NewState)
-                {
-                    case ConnectionState.Connected:
-                        // Start the SendLocation task
-                        locationSender = Task_SendLocationAync();
-                        break;
-                    default:
-                        // If the client is no longer connected to the server..
-                        break;
-                }
-            };
+			myHubProxy.On<Location>("jeMoeder", hello => Debug.WriteLine("Recieved je moeder location {0}, {1} \n", hello.userId, hello.latitude));
 
-            hubConnection.Start();
-        }
+			
+
+
+
+			//myHubProxy.On<Location>("sendLocation", (location) => sendLocation(location));
+
+			var httpClient = new DefaultHttpClient();
+
+			// Capture ConnectionState changes
+			hubConnection.StateChanged += (change) =>
+			{
+				switch (change.NewState)
+				{
+					case ConnectionState.Connected:
+						// Start the SendLocation task
+						// locationSender = Task_SendLocationAync();
+						//
+						connected = true;
+						break;
+					default:
+						// If the client is no longer connected to the server..
+						break;
+				}
+			};
+
+			hubConnection.Start(new AutoTransport(httpClient,
+			new IClientTransport[] 
+			{ 
+				new LongPollingTransport(httpClient),
+				new AutoTransport(httpClient)
+			}));
+
+
+			while (!connected)
+			{
+
+			}
+			myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
+
+
+			sendLocation();
+
+
+		}
+
+		private void sendLocation()
+		{
+			Location location = new Location("Test", 1, 2);
+
+			myHubProxy.Invoke("sendLocation", location);
+		}
+
 
         public static int convertStringToInt32(string text)
         {
@@ -124,7 +163,9 @@ namespace WPSignalR
                 {
                     // send location data
                     Debug.WriteLine("sending locationdata..");
-                    hubConnection.Send(getCurrentLocation());
+
+					
+                   // hubConnection.Send(getCurrentLocation());
                 });
             }
         }

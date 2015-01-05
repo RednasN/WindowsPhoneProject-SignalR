@@ -45,6 +45,12 @@ namespace WPSignalR
         }
     }
 
+	public class User
+	{
+		public String userId { get; set; }
+		public Location lastLocation { get; set; }
+	}
+
     public class Message
     {
         public Message(string senderId, string receiverId, string text)

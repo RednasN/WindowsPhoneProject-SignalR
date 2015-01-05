@@ -1,4 +1,6 @@
 ﻿
+using ConsoleServer.Managers;
+using ConsoleServer.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin.Cors;
@@ -22,6 +24,8 @@ namespace ConsoleServer
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
 			string url = "http://172.16.142.131:8080";
+
+			//169.254.80.80
 			using (WebApp.Start(url))
 			{
 				Console.WriteLine("Server running on {0}", url);
@@ -37,7 +41,15 @@ namespace ConsoleServer
 					if (key.ToUpper() == "E")
 					{
 						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-						hubContext.Clients.All.heartbeat();
+						//hubContext.Clients.All.heartbeat();
+
+						Location location = new Location();
+						location.latitude = 1;
+						location.latitude = 2;
+						location.userId = "Je moedertje";
+
+						hubContext.Clients.All.JeMoeder(location);
+
 						Console.WriteLine("Server Sending heartbeat\n");
 					}
 					if (key.ToUpper() == "R")
@@ -69,12 +81,46 @@ namespace ConsoleServer
 	}
 	public class MyHub : Hub
 	{
+		UserManager userManager = UserManager.getUserManager();
+
+
+
 		public void AddMessage(string name, string message)
 		{
 			Console.WriteLine("Hub AddMessage {0} {1}\n", name, message);
 			Clients.All.addMessageDoei(name, message);
 			Heartbeat();
 		}
+
+		/// <summary>
+		/// Updates the location of a specific user.
+		/// </summary>
+		/// <param name="location">Location of the user.</param>
+		public void SendLocation(Location location)
+		{			
+			userManager.updateLocation(location, Context.ConnectionId);
+
+			User currentUser = userManager.getUserById(Context.ConnectionId);
+
+			if(currentUser != null)
+			{
+				Clients.Caller.GetAvailableClients(userManager.getAvailableUsers(currentUser));
+			}
+		}
+
+		/// <summary>
+		/// Sends a message to another user.
+		/// </summary>
+		/// <param name="newMessage">Message from user.</param>
+		public void SendMessage(Message newMessage)
+		{
+			User currentUser = userManager.getUserById(newMessage.receiverId);			
+			if(currentUser != null)
+			{
+				Clients.Client(newMessage.receiverId).SendMessage(newMessage);
+			}
+		}
+
 
 		public void Heartbeat()
 		{
@@ -90,6 +136,11 @@ namespace ConsoleServer
 		public override Task OnConnected()
 		{
 			Console.WriteLine("Hub OnConnected {0}\n", Context.ConnectionId);
+
+			User newUser = new User();
+			newUser.userId = Context.ConnectionId;
+			userManager.addUser(newUser);
+
 			return (base.OnConnected());
 		}		
 
@@ -97,6 +148,16 @@ namespace ConsoleServer
 		{
 			Console.WriteLine("Hub OnReconnected {0}\n", Context.ConnectionId);
 			return (base.OnDisconnected(true));
+		}
+
+		public override Task OnDisconnected(bool stopCalled)
+		{
+			Console.WriteLine("Hub OnDisconnected {0}\n", Context.ConnectionId);
+
+			//userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
+
+			
+			return base.OnDisconnected(stopCalled);
 		}
 	}
 
