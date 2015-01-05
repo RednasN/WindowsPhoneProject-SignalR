@@ -22,11 +22,24 @@ namespace WPSignalR
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private SignalRConnection connection;
         public MainPage()
         {
             this.InitializeComponent();
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
+
+            try
+            {
+                connection = SignalRConnection.Instance;
+                lbl_Status.Text = "connected";
+
+                this.DataContext = connection;
+            }
+            catch
+            {
+                // @TODO: Do some proper logging.
+            }
         }
 
         /// <summary>

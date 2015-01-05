@@ -36,7 +36,6 @@ namespace WPSignalR
             this.DataContext = conversation;
             //lst_Messages.ItemsSource = conversation.messages;
 
-            conversation.addMessage(new Message("test", "test", "test"));
         }
 
         /// <summary>

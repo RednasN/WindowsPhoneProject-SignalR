@@ -7,13 +7,28 @@ using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
 using Microsoft.AspNet.SignalR.Client.Transports;
 using System.Diagnostics;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace WPSignalR
 {
-    public class SignalRConnection : IConnection
+    public class SignalRConnection : IConnection, INotifyPropertyChanged
     {
         private string userId;
-        public ConversationCollection conversations;
+
+        private ObservableCollection<Conversation> _conversations = new ObservableCollection<Conversation>();
+        public ObservableCollection<Conversation> conversations
+        {
+            get
+            {
+                return this._conversations;
+            }
+            set
+            {
+                this._conversations = value;
+                NotifyPropertyChanged("conversations");
+            }
+        }
         private HubConnection hubConnection;
         private Task locationSender;
         const string serverIp = "192.168.1.134";
@@ -38,8 +53,6 @@ namespace WPSignalR
 
         private void start()
         {
-            conversations = new ConversationCollection();
-
             hubConnection = new HubConnection("http://" + serverIp + ":" + serverPort + "/");
 
             // Make a HubProxy to define methods on this client which then can be called by the server
@@ -129,17 +142,27 @@ namespace WPSignalR
                 {
                     Conversation conversation = new Conversation(message.senderId);
                     conversation.addMessage(message);
-                    conversations.Add(conversation);   
+                    conversations.Add(conversation);
+                    NotifyPropertyChanged("conversations");
                 }
                 else
                 {
-                    conversations[0].addMessage(message);
+                    conversations[conversationIndex].addMessage(message);
                 }
+                NotifyPropertyChanged("conversations");
             }
             catch
             {
                 // @TODO: Do some proper logging.
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async Task Task_SendLocationAync()
@@ -151,6 +174,7 @@ namespace WPSignalR
                 {
                     // send location data
                     Debug.WriteLine("sending locationdata..");
+                    saveMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
                     sendLocation();
                 });
             }
@@ -164,7 +188,7 @@ namespace WPSignalR
         }
 
 
-        public ConversationCollection getConversations()
+        public ObservableCollection<Conversation> getConversations()
         {
             return conversations;
         }

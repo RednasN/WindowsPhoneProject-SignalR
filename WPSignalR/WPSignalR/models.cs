@@ -8,20 +8,6 @@ using System.ComponentModel;
 namespace WPSignalR
 {
 
-    public class ConversationCollection : ObservableCollection<Conversation>
-    {
-        public ConversationCollection() : base()
-        {
-            Conversation conversation = new Conversation("Hendrik");
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
-            Add(conversation);
-        }
-    }
-
     public class Location
     {
         public Location(string userId, double latitude, double longitude)
