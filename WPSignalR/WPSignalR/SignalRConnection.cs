@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
@@ -44,7 +43,7 @@ namespace WPSignalR
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine("Unable to add conversation to the Collection in SignalRConnection, Exception message: " + ex.Message.ToString());
             }
 			NotifyPropertyChanged("conversations");
 		}
@@ -224,10 +223,5 @@ namespace WPSignalR
             return location;
         }
 
-
-        public ObservableCollection<Conversation> getConversations()
-        {
-            return conversations;
-        }
     }
 }
