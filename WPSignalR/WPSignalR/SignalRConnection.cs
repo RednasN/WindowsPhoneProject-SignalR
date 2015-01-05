@@ -136,8 +136,9 @@ namespace WPSignalR
                     conversations[0].addMessage(message);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+
                 // @TODO: Do some proper logging.
             }
         }

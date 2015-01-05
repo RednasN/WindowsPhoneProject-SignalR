@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using System.ComponentModel;
+using Windows.UI.Core;
+using System.Diagnostics;
+using Windows.ApplicationModel.Core;
 
 namespace WPSignalR
 {
@@ -13,11 +16,11 @@ namespace WPSignalR
         public ConversationCollection() : base()
         {
             Conversation conversation = new Conversation("Hendrik");
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
-            conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
-            conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
+            //conversation.addMessage(new Message("Hendrik", "Edwin", "Hallo wereld!!!!!!"));
+            //conversation.addMessage(new Message("Edwin", "Hendrik", "Hey Hendrik"));
+            //conversation.addMessage(new Message("Edwin", "Hendrik", "Mijn naam is Edwin."));
+            //conversation.addMessage(new Message("Hendrik", "Edwin", "Leuk voor je..."));
+            //conversation.addMessage(new Message("Edwin", "Hendrik", "Nou... lekker aardig zeg!!"));
             Add(conversation);
         }
     }
@@ -59,7 +62,7 @@ namespace WPSignalR
         }
 
 
-        public void addMessage(Message message) {
+        public async void addMessage(Message message) {
             if (message.senderId == this.userId)
             {
                 message.position = Message.Position.Right;
@@ -69,16 +72,42 @@ namespace WPSignalR
                 message.position = Message.Position.Left;
             }
 
-            this._messages.Add(message);
+			try
+			{
+				CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+				await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+				  {
+					  this._messages.Add(message);
+
+				  });
+			}
+			catch (Exception ex)
+			{
+
+			}
+
+			
+			
+            
             NotifyPropertyChanged("messages");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void NotifyPropertyChanged(string propertyName)
+        protected async void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			if (PropertyChanged != null)
+			{
+
+				CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+				await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+				  {
+					  PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+
+				  });
+			}
+
+
         }
         
     }

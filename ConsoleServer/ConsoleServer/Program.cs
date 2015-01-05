@@ -23,7 +23,7 @@ namespace ConsoleServer
 			// use http://*:8080 to bind to all addresses. 
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
-			string url = "http://172.16.142.131:8080";
+			string url = "http://192.168.1.134:8080";
 
 			//169.254.80.80
 			using (WebApp.Start(url))
@@ -117,7 +117,8 @@ namespace ConsoleServer
 			User currentUser = userManager.getUserById(newMessage.receiverId);			
 			if(currentUser != null)
 			{
-				Clients.Client(newMessage.receiverId).SendMessage(newMessage);
+				//newMessage.senderId = newMessage.receiverId;
+				Clients.Client(Context.ConnectionId).SendMessageToUser(newMessage);
 			}
 		}
 
