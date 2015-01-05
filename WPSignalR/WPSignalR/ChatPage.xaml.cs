@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,14 +29,11 @@ namespace WPSignalR
         public ChatPage()
         {
             this.InitializeComponent();
-            connection = SignalRConnection.Instance;
-
-            conversation = connection.getConversations()[0];
-
-            lbl_ContactName.Text = conversation.userId;
-            this.DataContext = conversation;
-            //lst_Messages.ItemsSource = conversation.messages;
-
+        }
+        void HardwareButtons_BackPressed(Object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true; Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -45,6 +43,18 @@ namespace WPSignalR
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            connection = SignalRConnection.Instance;
+
+            List<Conversation> list = connection.getConversations().ToList<Conversation>();
+            int conversationIndex = list.FindIndex(x => x.userId == (string)e.Parameter);
+
+            if (conversationIndex >= 0)
+            {
+                conversation = connection.getConversations()[conversationIndex];
+
+                lbl_ContactName.Text = conversation.userId;
+                this.DataContext = conversation;
+            }
         }
 
         /// <summary>

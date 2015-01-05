@@ -22,7 +22,7 @@
             <TextBlock x:Name="lbl_PageName" Grid.Column="0" Grid.Row="0" FontSize="36" Text="Nearbies" />
             <TextBlock x:Name="lbl_Status" Grid.Column="2" Grid.Row="0" FontSize="18" Text="[status]" Margin="0 16 0 0" TextAlignment="Right" />
 
-            <ListView ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
+            <ListView IsItemClickEnabled="True" ItemClick="lst_Messages_ItemClick" ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
 						<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding userId}" />

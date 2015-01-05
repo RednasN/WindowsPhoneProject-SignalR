@@ -27,17 +27,12 @@ namespace WPSignalR
         {
             this.InitializeComponent();
 
-            this.NavigationCacheMode = NavigationCacheMode.Required;
-
             try
             {
                 connection = SignalRConnection.Instance;
                 lbl_Status.Text = "connected";
 
                 this.DataContext = connection;
-
-				Conversation conversation = new Conversation("Test");
-				connection.AddConversation(conversation);
             }
             catch
             {
@@ -59,6 +54,11 @@ namespace WPSignalR
             // Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
             // If you are using the NavigationHelper provided by some templates,
             // this event is handled for you.
+        }
+
+        private void lst_Messages_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(ChatPage), ((Conversation)e.ClickedItem).userId);
         }
     }
 }

@@ -68,12 +68,6 @@ namespace WPSignalR
             // Save a message upon receiving one
             myHubProxy.On<Message>("sendMessageToUser", (message) => saveMessage(message));
 
-            //myHubProxy.On<Location>("sendHelloObject", hello => OnSendData(""));
-
-            myHubProxy.On<Location>("jeMoeder", hello => Debug.WriteLine("Recieved je moeder location {0}, {1} \n", hello.userId, hello.latitude));
-
-            //myHubProxy.On<Location>("sendLocation", (location) => sendLocation(location));
-
             var httpClient = new DefaultHttpClient();
 
             // Capture ConnectionState changes
@@ -104,9 +98,21 @@ namespace WPSignalR
             {
 
             }
-            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => Debug.WriteLine("Received users: " + availableUsers.Count));
+            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
 
             sendLocation();
+        }
+
+        private void startConversations(List<User> availableUsers)
+        {
+            List<Conversation> list = conversations.ToList<Conversation>();
+            foreach (User user in availableUsers)
+            {
+                int conversationIndex = list.FindIndex(x => x.userId == user.userId);
+                if (conversationIndex == -1) {
+                    AddConversation(new Conversation(user.userId));
+                }
+            }
         }
 
         public void sendMessage(Message message)
@@ -155,7 +161,6 @@ namespace WPSignalR
                 {
                     conversations[conversationIndex].addMessage(message);
                 }
-                NotifyPropertyChanged("conversations");
             }
             catch
             {
