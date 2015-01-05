@@ -49,7 +49,7 @@ namespace WPSignalR
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.143";
+        const string serverIp = "192.168.192.37";
         const string serverPort = "8080";
         const int sendLocationDelay = 5000;
         Boolean connected = false;
@@ -222,6 +222,5 @@ namespace WPSignalR
             // @TODO: get current device location and add latitude and longitude here.
             return location;
         }
-
     }
 }
