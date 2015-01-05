@@ -25,15 +25,9 @@
             <ListView IsItemClickEnabled="True" ItemClick="lst_Messages_ItemClick" ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-						<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding userId}" />
+						<TextBlock HorizontalAlignment="Stretch" FontSize="16" TextWrapping="Wrap" Text="{Binding userId}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        <Setter Property="FontSize" Value="16"></Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
     </Grid>

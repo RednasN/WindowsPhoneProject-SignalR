@@ -29,11 +29,16 @@ namespace WPSignalR
         public ChatPage()
         {
             this.InitializeComponent();
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
-        void HardwareButtons_BackPressed(Object sender, BackPressedEventArgs e)
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
-            e.Handled = true; Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-            this.Frame.Navigate(typeof(MainPage));
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+                e.Handled = true;
+            }
         }
 
         /// <summary>

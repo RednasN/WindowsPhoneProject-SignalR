@@ -26,7 +26,7 @@ namespace WPSignalR
         public MainPage()
         {
             this.InitializeComponent();
-
+            
             try
             {
                 connection = SignalRConnection.Instance;

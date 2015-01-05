@@ -9,6 +9,8 @@ using Microsoft.AspNet.SignalR.Client.Transports;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
 
 namespace WPSignalR
 {
@@ -30,9 +32,20 @@ namespace WPSignalR
             }
         }
 
-		public void AddConversation(Conversation newConversation)
+        public async void AddConversation(Conversation newConversation)
 		{
-			this._conversations.Add(newConversation);
+            try
+            {
+                CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    this._conversations.Add(newConversation);
+                });
+            }
+            catch (Exception ex)
+            {
+
+            }
 			NotifyPropertyChanged("conversations");
 		}
         private HubConnection hubConnection;
@@ -170,10 +183,16 @@ namespace WPSignalR
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void NotifyPropertyChanged(string propertyName)
+        protected async void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            {
+                CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                });
+            }
         }
 
         private async Task Task_SendLocationAync()
