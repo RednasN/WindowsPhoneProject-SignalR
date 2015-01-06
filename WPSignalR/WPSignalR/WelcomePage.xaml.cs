@@ -51,6 +51,7 @@ namespace WPSignalR
             if (txt_Username.Text.Length > 0)
             {
                 connection.registerUserName(txt_Username.Text);
+				Frame.Navigate(typeof(MainPage));
             }
         }
     }

@@ -28,7 +28,8 @@ namespace ConsoleServer
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
 
-            string url = "http://" + getMyLocalIP() + ":8080"; 
+            string url = "http://" + getMyLocalIP() + ":8080";
+			url = "http://*:8080"; 
 
 			//169.254.80.80
 			using (WebApp.Start(url))

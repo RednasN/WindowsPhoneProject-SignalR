@@ -16,6 +16,7 @@ namespace WPSignalR
     public class SignalRConnection : IConnection, INotifyPropertyChanged
     {
         private string userId;
+		public String UserName;
 
         private ObservableCollection<Conversation> _conversations = new ObservableCollection<Conversation>();
         public ObservableCollection<Conversation> conversations
@@ -175,7 +176,9 @@ namespace WPSignalR
 
         public void registerUserName(string username)
         {
+			UserName = username;
             myHubProxy.Invoke("SendUserName", username);
+
         }
 
         public String getMyUserId()
