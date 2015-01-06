@@ -166,6 +166,7 @@ namespace WPSignalR
 
 			if(conversationIndex != -1)
 			{
+                message.userName = this.UserName;
 				conversations[conversationIndex].addMessage(message);
 			}
             myHubProxy.Invoke("sendMessage", message);
