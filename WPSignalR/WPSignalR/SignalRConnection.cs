@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
 using WPSignalR.Models;
+using Windows.Devices.Geolocation;
 
 namespace WPSignalR
 {
@@ -184,10 +185,28 @@ namespace WPSignalR
             return hubConnection.ConnectionId;
         }
 
-        private void sendLocation()
+        private async void sendLocation()
         {
-            Location location = new Location(getMyUserId(), 1, 2);
-            myHubProxy.Invoke("sendLocation", location);
+            Geolocator geolocator = new Geolocator();
+            geolocator.DesiredAccuracyInMeters = 50;
+
+            try
+            {
+                Geoposition geoposition = await geolocator.GetGeopositionAsync(
+                    maximumAge: TimeSpan.FromSeconds(10),
+                    timeout: TimeSpan.FromSeconds(10)
+                    );
+
+                Location location = new Location(getMyUserId(), geoposition.Coordinate.Latitude, geoposition.Coordinate.Longitude);
+                await myHubProxy.Invoke("sendLocation", location);
+            }
+            catch (Exception ex)
+            {
+                if ((uint)ex.HResult == 0x80004004)
+                {
+                    Debug.WriteLine("location is disabled in phone settings.");
+                }
+            }
         }
 
         public static int convertStringToInt32(string text)
@@ -253,13 +272,6 @@ namespace WPSignalR
                     sendLocation();
                 });
             }
-        }
-
-        private Location getCurrentLocation()
-        {
-            Location location = new Location(getMyUserId(), -52.1234, 12.1234);
-            // @TODO: get current device location and add latitude and longitude here.
-            return location;
         }
     }
 }

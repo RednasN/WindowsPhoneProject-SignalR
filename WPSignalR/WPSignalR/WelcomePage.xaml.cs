@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -43,8 +44,15 @@ namespace WPSignalR
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            //Message Box.
+            MessageDialog msg = new MessageDialog("We hebben locatietoegang nodig je te kunnen verbinden met andere gebruikers.", "Locatietoegang vereist");
+            //Commands
+            msg.Commands.Add(new UICommand("Oke", new UICommandInvokedHandler(CommandHandlers)));
+            msg.Commands.Add(new UICommand("Nee bedankt", new UICommandInvokedHandler(CommandHandlers)));
+
+            await msg.ShowAsync();
         }
 
         private void btn_RegisterUsername_Click(object sender, RoutedEventArgs e)
@@ -60,6 +68,26 @@ namespace WPSignalR
             if (e.Key == VirtualKey.Enter)
             {
                 btn_RegisterUsername_Click(sender, new RoutedEventArgs());
+            }
+        }
+
+
+        /// <summary>
+        /// Handles the clicked command of the MessageDialog.
+        /// </summary>
+        /// <param name="commandLabel"></param>
+        public void CommandHandlers(IUICommand commandLabel)
+        {
+            switch (commandLabel.Label)
+            {
+                case "Oke":
+                    // User clicked Jaa
+                    btn_RegisterUsername.IsEnabled = true;
+                    break;
+                case "Nee bedankt":
+                    btn_RegisterUsername.IsEnabled = false;
+                    // User clicked Nee
+                    break;
             }
         }
     }
