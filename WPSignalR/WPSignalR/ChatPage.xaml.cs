@@ -51,12 +51,12 @@ namespace WPSignalR
         {
             connection = SignalRConnection.Instance;
 
-            List<Conversation> list = connection.getConversations().ToList<Conversation>();
+            List<Conversation> list = connection.conversations.ToList<Conversation>();
             int conversationIndex = list.FindIndex(x => x.userId == (string)e.Parameter);
 
             if (conversationIndex >= 0)
             {
-                conversation = connection.getConversations()[conversationIndex];
+                conversation = connection.conversations[conversationIndex];
 
                 lbl_ContactName.Text = conversation.userId;
                 this.DataContext = conversation;
