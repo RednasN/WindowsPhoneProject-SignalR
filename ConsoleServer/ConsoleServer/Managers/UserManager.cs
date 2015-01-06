@@ -37,6 +37,17 @@ namespace ConsoleServer.Managers
 			}
 		}
 
+		public void UpdateUser(String userName, String userId)
+		{
+			int userIndex = availableUsers.FindIndex(x => x.userId == userId);
+
+			if (userIndex != -1)
+			{
+				availableUsers[userIndex].userName = userName;
+			}
+		}
+
+
 		public void deleteUser(String connectionId)
 		{
 			int userIndex = availableUsers.FindIndex(x => x.userId == connectionId);

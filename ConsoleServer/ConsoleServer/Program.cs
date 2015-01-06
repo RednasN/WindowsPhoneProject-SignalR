@@ -121,6 +121,11 @@ namespace ConsoleServer
 				Clients.Client(newMessage.receiverId).SendMessageToUser(newMessage);
 			}
 		}
+		public void sendUserName(String userName)
+		{
+			userManager.UpdateUser(userName, Context.ConnectionId);
+		}
+
 
 
 		public void Heartbeat()
@@ -156,6 +161,11 @@ namespace ConsoleServer
 			Console.WriteLine("Hub OnDisconnected {0}\n", Context.ConnectionId);
 
 			//userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
+
+			userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
+
+			Clients.All.SendDisconnectedUser(Context.ConnectionId);
+
 
 			
 			return base.OnDisconnected(stopCalled);
