@@ -7,6 +7,8 @@ namespace WPSignalR
         public String userId { get; set; }
         public Location lastLocation { get; set; }
 
+		public String userName { get; set; }
+
         /// <summary>
         /// User constructor, a userId is required to create a instance.
         /// </summary>

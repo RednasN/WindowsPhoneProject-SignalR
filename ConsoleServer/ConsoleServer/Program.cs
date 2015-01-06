@@ -101,13 +101,6 @@ namespace ConsoleServer
 	{
         UserManager userManager = UserManager.getUserManager();
 
-		public void AddMessage(string name, string message)
-		{
-			Console.WriteLine("Hub AddMessage {0} {1}\n", name, message);
-			Clients.All.addMessageDoei(name, message);
-			Heartbeat();
-		}
-
 		/// <summary>
 		/// Updates the location of a specific user.
 		/// </summary>
@@ -139,17 +132,6 @@ namespace ConsoleServer
 			}
 		}
 
-
-		public void Heartbeat()
-		{
-			Clients.All.heartbeat();
-		}
-
-		public void SendHelloObject(HelloModel hello)
-		{
-			Console.WriteLine("Hub hello {0} {1}\n", hello.Molly, hello.Age);
-			AddMessage("Doei", "Goeie dag");
-		}
 
 		public override Task OnConnected()
 		{

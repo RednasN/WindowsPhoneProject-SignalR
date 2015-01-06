@@ -35,6 +35,8 @@ namespace WPSignalR
             this.userId = userId;
         }
 
+		public String userName { get; set; }
+
         /// <summary>
         /// Adds a message to this conversation.
         /// </summary>
