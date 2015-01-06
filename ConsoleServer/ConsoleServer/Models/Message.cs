@@ -17,5 +17,7 @@ namespace ConsoleServer.Models
 		public string senderId { get; set; }
 		public string receiverId { get; set; }
 		public string text;
+		public string userName { get; set; }
+
 	}
 }

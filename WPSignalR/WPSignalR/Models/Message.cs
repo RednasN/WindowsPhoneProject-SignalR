@@ -37,6 +37,8 @@ namespace WPSignalR.Models
         public string senderId { get; set; }
         public string receiverId { get; set; }
         public string text { get; set; }
+
+		public string userName { get; set; }
     }
 }
 

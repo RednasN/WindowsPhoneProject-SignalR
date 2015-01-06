@@ -10,5 +10,7 @@ namespace WPSignalR.Models
 	{
 		public String userId { get; set; }
 		public Location lastLocation { get; set; }
+
+		public String userName { get; set; }
 	}
 }

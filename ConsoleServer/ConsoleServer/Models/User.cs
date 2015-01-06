@@ -10,5 +10,7 @@ namespace ConsoleServer.Models
 	{
 		public String userId { get; set; }
 		public Location lastLocation { get; set; }
+		public string userName { get; set; }
+
 	}
 }
