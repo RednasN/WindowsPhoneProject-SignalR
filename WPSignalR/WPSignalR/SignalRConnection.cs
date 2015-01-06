@@ -15,7 +15,6 @@ namespace WPSignalR
 {
     public class SignalRConnection : IConnection, INotifyPropertyChanged
     {
-        private string userId;
 		public String UserName;
 
         private ObservableCollection<Conversation> _conversations = new ObservableCollection<Conversation>();
@@ -67,9 +66,9 @@ namespace WPSignalR
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.126";
+        const string serverIp = "77.174.146.192";
         const string serverPort = "8080";
-        const int sendLocationDelay = 5000;
+        const int sendLocationDelay = 10000;
         Boolean connected = false;
         IHubProxy myHubProxy;
         private static SignalRConnection instance;
@@ -108,6 +107,8 @@ namespace WPSignalR
                     case ConnectionState.Connected:
                         // Start the SendLocation task
                         locationSender = Task_SendLocationAync();
+                        myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
+			            myHubProxy.On<String>("sendDisconnectedUser", connectionId => removeConversation(connectionId));
                         connected = true;
                         break;
                     default:
@@ -123,14 +124,6 @@ namespace WPSignalR
 				new AutoTransport(httpClient)
 			}));
 
-
-            while (!connected)
-            {
-
-            }
-            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
-			myHubProxy.On<String>("sendDisconnectedUser", connectionId => removeConversation(connectionId));
-            sendLocation();
         }
 
 		public void removeConversation(String connectionId)
@@ -188,7 +181,7 @@ namespace WPSignalR
 
         private void sendLocation()
         {
-            Location location = new Location("Test", 1, 2);
+            Location location = new Location(getMyUserId(), 1, 2);
             myHubProxy.Invoke("sendLocation", location);
         }
 
@@ -259,7 +252,7 @@ namespace WPSignalR
 
         private Location getCurrentLocation()
         {
-            Location location = new Location(this.userId, -52.1234, 12.1234);
+            Location location = new Location(getMyUserId(), -52.1234, 12.1234);
             // @TODO: get current device location and add latitude and longitude here.
             return location;
         }
