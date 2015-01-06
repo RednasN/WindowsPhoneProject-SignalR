@@ -5,7 +5,7 @@
     xmlns:local="using:WPSignalR">
 
     <Application.Resources>
-        <Style TargetType="Page" >
+        <Style TargetType="Page" x:Key="pageStyle">
             <Setter Property="Background" Value="#FF3B3075"/>
         </Style>
         <Style TargetType="TextBlock" x:Key="pageNameStyle" >
