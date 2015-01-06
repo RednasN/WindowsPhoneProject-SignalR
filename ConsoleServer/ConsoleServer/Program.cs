@@ -21,6 +21,8 @@ namespace ConsoleServer
 	{
 		static void Main(string[] args)
 		{
+			GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(10);
+
 			// This will *ONLY* bind to localhost, if you want to bind to all addresses
 			// use http://*:8080 to bind to all addresses. 
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
@@ -169,8 +171,9 @@ namespace ConsoleServer
 		{
 			Console.WriteLine("Hub OnDisconnected {0}\n", Context.ConnectionId);
 
-			//userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
+			userManager.deleteUser(Context.ConnectionId); //TODO, enable disable.
 
+			Clients.All.SendDisconnectedUser(Context.ConnectionId);
 			
 			return base.OnDisconnected(stopCalled);
 		}

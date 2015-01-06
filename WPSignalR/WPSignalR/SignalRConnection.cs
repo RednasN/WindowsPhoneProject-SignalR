@@ -31,6 +31,23 @@ namespace WPSignalR
             }
         }
 
+		public async void RemoveConversation(int conversationIndex)
+		{
+			try
+			{
+				CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+				await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+				{
+					this._conversations.RemoveAt(conversationIndex);
+				});
+				NotifyPropertyChanged("conversations");
+			}
+			catch(Exception ex)
+			{
+
+			}
+		}
+
         public async void AddConversation(Conversation newConversation)
 		{
             try
@@ -49,7 +66,7 @@ namespace WPSignalR
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.192.37";
+        const string serverIp = "192.168.1.126";
         const string serverPort = "8080";
         const int sendLocationDelay = 5000;
         Boolean connected = false;
@@ -111,9 +128,20 @@ namespace WPSignalR
 
             }
             myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
-
+			myHubProxy.On<String>("sendDisconnectedUser", connectionId => removeConversation(connectionId));
             sendLocation();
         }
+
+		public void removeConversation(String connectionId)
+		{
+			List<Conversation> list = conversations.ToList<Conversation>();
+			int conversationToRemove = list.FindIndex(x => x.userId == connectionId);
+
+			if(conversationToRemove != -1)
+			{
+				RemoveConversation(conversationToRemove);
+			}
+		}
 
         private void startConversations(List<User> availableUsers)
         {
