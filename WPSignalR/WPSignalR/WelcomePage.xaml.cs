@@ -86,6 +86,7 @@ namespace WPSignalR
                     break;
                 case "Nee bedankt":
                     btn_RegisterUsername.IsEnabled = false;
+                    Application.Current.Exit();
                     // User clicked Nee
                     break;
             }
