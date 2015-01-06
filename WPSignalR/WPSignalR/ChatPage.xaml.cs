@@ -58,7 +58,7 @@ namespace WPSignalR
             {
                 conversation = connection.conversations[conversationIndex];
 
-                lbl_ContactName.Text = conversation.userId;
+                lbl_ContactName.Text = conversation.userName;
                 this.DataContext = conversation;
             }
         }

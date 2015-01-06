@@ -145,11 +145,14 @@ namespace WPSignalR
             {
                 int conversationIndex = list.FindIndex(x => x.userId == user.userId);
                 if (conversationIndex == -1) {
-                    AddConversation(new Conversation(user.userId));
+                    Conversation conversation = new Conversation(user.userId);
+                    conversation.userName = user.userName;
+                    AddConversation(conversation);
                 } else {
                     // if the username is updated, change it in the conversation
                     if (user.userName != list[conversationIndex].userName) {
-						conversations[conversationIndex].userName = user.userName;
+                        conversations[conversationIndex].userName = user.userName;
+                        NotifyPropertyChanged("conversations");
                     }
                 }
             }
