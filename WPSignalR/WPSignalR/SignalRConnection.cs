@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
+using WPSignalR.Models;
 
 namespace WPSignalR
 {
@@ -50,7 +51,7 @@ namespace WPSignalR
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.143";
+        const string serverIp = "192.168.1.126";
         const string serverPort = "8080";
         const int sendLocationDelay = 5000;
         Boolean connected = false;
