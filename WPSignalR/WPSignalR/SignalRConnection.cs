@@ -151,6 +151,11 @@ namespace WPSignalR
                 int conversationIndex = list.FindIndex(x => x.userId == user.userId);
                 if (conversationIndex == -1) {
                     AddConversation(new Conversation(user.userId));
+                } else {
+                    // if the username is updated, change it in the conversation
+                    if (user.userName != list[conversationIndex].userName) {
+                        conversations[conversationIndex].userName = user.userName;
+                    }
                 }
             }
         }
@@ -166,6 +171,11 @@ namespace WPSignalR
 				conversations[conversationIndex].addMessage(message);
 			}
             myHubProxy.Invoke("sendMessage", message);
+        }
+
+        public void registerUserName(string username)
+        {
+            myHubProxy.Invoke("SendUserName", username);
         }
 
         public String getMyUserId()
