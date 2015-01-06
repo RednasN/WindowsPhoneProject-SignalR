@@ -12,6 +12,7 @@ namespace WPSignalR.Models
 {
 	public class Conversation : INotifyPropertyChanged
 	{
+		public String userName { get; set; }
 		public Conversation(string userId)
 		{
 			this.userId = userId;

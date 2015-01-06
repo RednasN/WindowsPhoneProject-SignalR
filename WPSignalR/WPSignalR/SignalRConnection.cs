@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
+using WPSignalR.Models;
 
 namespace WPSignalR
 {
@@ -148,7 +149,7 @@ namespace WPSignalR
                 } else {
                     // if the username is updated, change it in the conversation
                     if (user.userName != list[conversationIndex].userName) {
-                        conversations[conversationIndex].userName = user.userName;
+						conversations[conversationIndex].userName = user.userName;
                     }
                 }
             }
