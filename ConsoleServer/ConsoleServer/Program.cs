@@ -115,7 +115,9 @@ namespace ConsoleServer
 		public void SendMessage(Message newMessage)
 		{
 			User currentUser = userManager.getUserById(newMessage.receiverId);
-			newMessage.userName = currentUser.userName;
+			User senderUser = userManager.getUserById(Context.ConnectionId);
+
+			newMessage.userName = senderUser.userName;
 			if(currentUser != null)
 			{
 				//newMessage.senderId = newMessage.receiverId;
