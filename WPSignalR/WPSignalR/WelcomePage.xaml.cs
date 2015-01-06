@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -52,6 +53,13 @@ namespace WPSignalR
             {
                 connection.registerUserName(txt_Username.Text);
 				Frame.Navigate(typeof(MainPage));
+            }
+        }
+        private void OnKeyDownHandler(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                btn_RegisterUsername_Click(sender, new RoutedEventArgs());
             }
         }
     }

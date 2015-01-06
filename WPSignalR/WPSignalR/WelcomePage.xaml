@@ -23,7 +23,7 @@
         <TextBlock x:Name="lbl_PageName" Style="{StaticResource pageNameStyle}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" FontSize="36" Text="Welkom" />
         <TextBlock x:Name="lbl_AboutThisApp" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" FontSize="16" Text="Welkom bij Nearby, met deze app kun je chatten met Personen die bij jou in de buurt zijn." TextWrapping="Wrap" />
 
-        <TextBox x:Name="txt_Username" Grid.Column="0" Grid.Row="3" PlaceholderText="Gebruikersnaam" HorizontalAlignment="Stretch" Margin="0 11 0 0" />
+        <TextBox x:Name="txt_Username" KeyDown="OnKeyDownHandler" Grid.Column="0" Grid.Row="3" PlaceholderText="Gebruikersnaam" HorizontalAlignment="Stretch" Margin="0 11 0 0" />
         <Button Click="btn_RegisterUsername_Click" x:Name="btn_RegisterUsername" Grid.Column="2" Grid.Row="3" Content="Registreer" HorizontalAlignment="Stretch" />
         
     </Grid>

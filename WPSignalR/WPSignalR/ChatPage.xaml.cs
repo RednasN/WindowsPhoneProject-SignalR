@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using WPSignalR.Models;
+using Windows.System;
 
 namespace WPSignalR
 {
@@ -35,11 +37,9 @@ namespace WPSignalR
         void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                rootFrame.GoBack();
-                e.Handled = true;
-            }
+            rootFrame.Navigate(typeof(MainPage));
+            e.Handled = true;
+            
         }
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace WPSignalR
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             connection = SignalRConnection.Instance;
 
             List<Conversation> list = connection.conversations.ToList<Conversation>();
@@ -87,6 +88,14 @@ namespace WPSignalR
             if (txt_Message.Text.Equals(""))
             {
                 txt_Message.Text = text;
+            }
+        }
+
+        private void OnKeyDownHandler(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                btn_Send_Click(sender, new RoutedEventArgs());
             }
         }
     }

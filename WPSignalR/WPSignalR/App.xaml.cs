@@ -57,7 +57,10 @@ namespace WPSignalR
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    // TODO: Load state from previously suspended application
+                    if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                    {
+                        throw new Exception("Failed to create Main page");
+                    }
                 }
 
                 // Place the frame in the current Window
