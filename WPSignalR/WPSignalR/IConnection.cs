@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNet.SignalR.Client;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using WPSignalR.Models;
 
 namespace WPSignalR
@@ -12,9 +6,8 @@ namespace WPSignalR
     interface IConnection
     {
         void sendMessage(Message message);
+        void registerUserName(string username);
         string getMyUserId();
-
-        ObservableCollection<Conversation> getConversations();
-
+        ObservableCollection<Conversation> conversations { get; set; }
     }
 }
