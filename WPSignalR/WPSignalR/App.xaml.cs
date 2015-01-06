@@ -1,23 +1,8 @@
-﻿using Microsoft.AspNet.SignalR.Client;
-using Microsoft.AspNet.SignalR.Client.Http;
-using Microsoft.AspNet.SignalR.Client.Transports;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -97,7 +82,7 @@ namespace WPSignalR
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(WelcomePage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

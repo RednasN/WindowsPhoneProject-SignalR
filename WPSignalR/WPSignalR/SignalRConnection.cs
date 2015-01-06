@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
@@ -11,13 +10,12 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
-using WPSignalR.Models;
 
 namespace WPSignalR
 {
     public class SignalRConnection : IConnection, INotifyPropertyChanged
     {
-        private string userId;
+		public String UserName;
 
         private ObservableCollection<Conversation> _conversations = new ObservableCollection<Conversation>();
         public ObservableCollection<Conversation> conversations
@@ -33,6 +31,23 @@ namespace WPSignalR
             }
         }
 
+		public async void RemoveConversation(int conversationIndex)
+		{
+			try
+			{
+				CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+				await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+				{
+					this._conversations.RemoveAt(conversationIndex);
+				});
+				NotifyPropertyChanged("conversations");
+			}
+			catch(Exception ex)
+			{
+
+			}
+		}
+
         public async void AddConversation(Conversation newConversation)
 		{
             try
@@ -45,15 +60,15 @@ namespace WPSignalR
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine("Unable to add conversation to the Collection in SignalRConnection, Exception message: " + ex.Message.ToString());
             }
 			NotifyPropertyChanged("conversations");
 		}
         private HubConnection hubConnection;
         private Task locationSender;
-        const string serverIp = "192.168.1.126";
+        const string serverIp = "77.174.146.192";
         const string serverPort = "8080";
-        const int sendLocationDelay = 5000;
+        const int sendLocationDelay = 10000;
         Boolean connected = false;
         IHubProxy myHubProxy;
         private static SignalRConnection instance;
@@ -92,6 +107,8 @@ namespace WPSignalR
                     case ConnectionState.Connected:
                         // Start the SendLocation task
                         locationSender = Task_SendLocationAync();
+                        myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
+			            myHubProxy.On<String>("sendDisconnectedUser", connectionId => removeConversation(connectionId));
                         connected = true;
                         break;
                     default:
@@ -107,15 +124,18 @@ namespace WPSignalR
 				new AutoTransport(httpClient)
 			}));
 
-
-            while (!connected)
-            {
-
-            }
-            myHubProxy.On<List<User>>("getAvailableClients", availableUsers => startConversations(availableUsers));
-
-            sendLocation();
         }
+
+		public void removeConversation(String connectionId)
+		{
+			List<Conversation> list = conversations.ToList<Conversation>();
+			int conversationToRemove = list.FindIndex(x => x.userId == connectionId);
+
+			if(conversationToRemove != -1)
+			{
+				RemoveConversation(conversationToRemove);
+			}
+		}
 
         private void startConversations(List<User> availableUsers)
         {
@@ -125,6 +145,11 @@ namespace WPSignalR
                 int conversationIndex = list.FindIndex(x => x.userId == user.userId);
                 if (conversationIndex == -1) {
                     AddConversation(new Conversation(user.userId));
+                } else {
+                    // if the username is updated, change it in the conversation
+                    if (user.userName != list[conversationIndex].userName) {
+                        conversations[conversationIndex].userName = user.userName;
+                    }
                 }
             }
         }
@@ -142,6 +167,13 @@ namespace WPSignalR
             myHubProxy.Invoke("sendMessage", message);
         }
 
+        public void registerUserName(string username)
+        {
+			UserName = username;
+            myHubProxy.Invoke("SendUserName", username);
+
+        }
+
         public String getMyUserId()
         {
             return hubConnection.ConnectionId;
@@ -149,7 +181,7 @@ namespace WPSignalR
 
         private void sendLocation()
         {
-            Location location = new Location("Test", 1, 2);
+            Location location = new Location(getMyUserId(), 1, 2);
             myHubProxy.Invoke("sendLocation", location);
         }
 
@@ -220,15 +252,9 @@ namespace WPSignalR
 
         private Location getCurrentLocation()
         {
-            Location location = new Location(this.userId, -52.1234, 12.1234);
+            Location location = new Location(getMyUserId(), -52.1234, 12.1234);
             // @TODO: get current device location and add latitude and longitude here.
             return location;
-        }
-
-
-        public ObservableCollection<Conversation> getConversations()
-        {
-            return conversations;
         }
     }
 }

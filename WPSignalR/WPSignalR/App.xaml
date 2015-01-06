@@ -4,4 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WPSignalR">
 
+    <Application.Resources>
+        <Style TargetType="Page" x:Key="pageStyle">
+            <Setter Property="Background" Value="#FF3B3075"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="pageNameStyle" >
+            <Setter Property="Foreground" Value="#FFCCC2FF"/>
+        </Style>
+    </Application.Resources>
+
 </Application>

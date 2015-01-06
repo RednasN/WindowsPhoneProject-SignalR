@@ -6,29 +6,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Style="{StaticResource pageStyle}">
 
-    <Grid>
-        <Grid Margin="10 10 10 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="120" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="70" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <Grid Margin="10 10 10 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="120" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <TextBlock x:Name="lbl_PageName" Grid.Column="0" Grid.Row="0" FontSize="36" Text="Nearbies" />
-            <TextBlock x:Name="lbl_Status" Grid.Column="2" Grid.Row="0" FontSize="18" Text="[status]" Margin="0 16 0 0" TextAlignment="Right" />
+        <TextBlock x:Name="lbl_PageName" Style="{StaticResource pageNameStyle}" Grid.Column="0" Grid.Row="0" FontSize="36" Text="Nearbies" />
+        <TextBlock x:Name="lbl_Status" Grid.Column="2" Grid.Row="0" FontSize="18" Text="[status]" Margin="0 16 0 0" TextAlignment="Right" />
 
-            <ListView IsItemClickEnabled="True" ItemClick="lst_Messages_ItemClick" ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-						<TextBlock HorizontalAlignment="Stretch" FontSize="16" TextWrapping="Wrap" Text="{Binding userId}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+        <ListView IsItemClickEnabled="True" ItemClick="lst_Messages_ItemClick" ItemsSource="{Binding conversations}" HorizontalAlignment="Stretch" x:Name="lst_Messages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0 10 0 0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock HorizontalAlignment="Stretch" FontSize="16" TextWrapping="Wrap" Text="{Binding userId}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>
