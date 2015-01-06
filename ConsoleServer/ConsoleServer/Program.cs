@@ -117,6 +117,11 @@ namespace ConsoleServer
 			}
 		}
 
+		public void sendUserName(String userName)
+		{
+			userManager.UpdateUser(userName, Context.ConnectionId);
+		}
+
 		/// <summary>
 		/// Sends a message to another user.
 		/// </summary>
