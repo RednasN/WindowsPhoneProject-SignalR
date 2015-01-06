@@ -31,40 +31,7 @@ namespace ConsoleServer
 				Console.WriteLine("Server running on {0}", url);
 				while (true)
 				{
-					string key = Console.ReadLine();
-					if (key.ToUpper() == "W")
-					{
-						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-						hubContext.Clients.All.addMessage("server", "ServerMessage");
-						Console.WriteLine("Server Sending addMessage\n");
-					}
-					if (key.ToUpper() == "E")
-					{
-						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-						//hubContext.Clients.All.heartbeat();
-
-						Location location = new Location();
-						location.latitude = 1;
-						location.latitude = 2;
-						location.userId = "Je moedertje";
-
-						hubContext.Clients.All.JeMoeder(location);
-
-						Console.WriteLine("Server Sending heartbeat\n");
-					}
-					if (key.ToUpper() == "R")
-					{
-						IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-
-						var vv = new HelloModel { Age = 37, Molly = "pushed direct from Server " };
-
-						hubContext.Clients.All.sendHelloObject(vv);
-						Console.WriteLine("Server Sending sendHelloObject\n");
-					}
-					if (key.ToUpper() == "C")
-					{
-						break;
-					}
+					
 				}
 
 				Console.ReadLine();
@@ -83,14 +50,6 @@ namespace ConsoleServer
 	{
 		UserManager userManager = UserManager.getUserManager();
 
-
-
-		public void AddMessage(string name, string message)
-		{
-			Console.WriteLine("Hub AddMessage {0} {1}\n", name, message);
-			Clients.All.addMessageDoei(name, message);
-			Heartbeat();
-		}
 
 		/// <summary>
 		/// Updates the location of a specific user.
@@ -129,19 +88,6 @@ namespace ConsoleServer
 			userManager.UpdateUser(userName, Context.ConnectionId);
 		}
 
-
-
-		public void Heartbeat()
-		{
-			Clients.All.heartbeat();
-		}
-
-		public void SendHelloObject(HelloModel hello)
-		{
-			Console.WriteLine("Hub hello {0} {1}\n", hello.Molly, hello.Age);
-			AddMessage("Doei", "Goeie dag");
-		}
-
 		public override Task OnConnected()
 		{
 			Console.WriteLine("Hub OnConnected {0}\n", Context.ConnectionId);
@@ -173,12 +119,5 @@ namespace ConsoleServer
 			
 			return base.OnDisconnected(stopCalled);
 		}
-	}
-
-	public class HelloModel
-	{
-		public string Molly { get; set; }
-
-		public int Age { get; set; }
 	}
 }

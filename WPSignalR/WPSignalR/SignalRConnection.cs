@@ -152,10 +152,11 @@ namespace WPSignalR
                     // if the username is updated, change it in the conversation
                     if (user.userName != list[conversationIndex].userName) {
                         conversations[conversationIndex].userName = user.userName;
-                        NotifyPropertyChanged("conversations");
+                        
                     }
                 }
             }
+			NotifyPropertyChanged("conversations");
         }
 
         public void sendMessage(Message message)
@@ -186,7 +187,7 @@ namespace WPSignalR
 
         private void sendLocation()
         {
-            Location location = new Location(getMyUserId(), 1, 2);
+			Location location = new Location(getMyUserId(), 51.814463, 4.671670);
             myHubProxy.Invoke("sendLocation", location);
         }
 
