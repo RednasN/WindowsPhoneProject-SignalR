@@ -114,7 +114,8 @@ namespace ConsoleServer
 		/// <param name="newMessage">Message from user.</param>
 		public void SendMessage(Message newMessage)
 		{
-			User currentUser = userManager.getUserById(newMessage.receiverId);			
+			User currentUser = userManager.getUserById(newMessage.receiverId);
+			newMessage.userName = currentUser.userName;
 			if(currentUser != null)
 			{
 				//newMessage.senderId = newMessage.receiverId;
