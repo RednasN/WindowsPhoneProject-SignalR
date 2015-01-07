@@ -28,7 +28,15 @@ namespace WPSignalR
         public WelcomePage()
         {
             this.InitializeComponent();
+        }
 
+        /// <summary>
+        /// Invoked when this page is about to be displayed in a Frame.
+        /// </summary>
+        /// <param name="e">Event data that describes how this page was reached.
+        /// This parameter is typically used to configure the page.</param>
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
             try
             {
                 connection = SignalRConnection.Instance;
@@ -39,21 +47,6 @@ namespace WPSignalR
             }
         }
 
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.
-        /// This parameter is typically used to configure the page.</param>
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            //Message Box.
-            MessageDialog msg = new MessageDialog("We hebben locatietoegang nodig je te kunnen verbinden met andere gebruikers.", "Locatietoegang vereist");
-            //Commands
-            msg.Commands.Add(new UICommand("Oke", new UICommandInvokedHandler(CommandHandlers)));
-            msg.Commands.Add(new UICommand("Nee bedankt", new UICommandInvokedHandler(CommandHandlers)));
-
-            await msg.ShowAsync();
-        }
 
         private void btn_RegisterUsername_Click(object sender, RoutedEventArgs e)
         {
@@ -90,6 +83,17 @@ namespace WPSignalR
                     // User clicked Nee
                     break;
             }
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Message Box.
+            MessageDialog msg = new MessageDialog("We hebben locatietoegang nodig je te kunnen verbinden met andere gebruikers.", "Locatietoegang vereist");
+            //Commands
+            msg.Commands.Add(new UICommand("Oke", new UICommandInvokedHandler(CommandHandlers)));
+            msg.Commands.Add(new UICommand("Nee bedankt", new UICommandInvokedHandler(CommandHandlers)));
+
+            await msg.ShowAsync();
         }
     }
 }
