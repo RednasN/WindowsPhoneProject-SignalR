@@ -10,6 +10,8 @@ using SignalR.Hosting.Self;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +25,7 @@ namespace ConsoleServer
 			// use http://*:8080 to bind to all addresses. 
 			// See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
 			// for more information.
-			string url = "http://192.168.1.126:8080";
+            string url = "http://" + getMyLocalIP() + ":8080"; 
 
 			//169.254.80.80
 			using (WebApp.Start(url))
@@ -37,6 +39,22 @@ namespace ConsoleServer
 				Console.ReadLine();
 			}
 		}
+
+        private static string getMyLocalIP()
+        {
+            // Determine your ip
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
+        }
 	}
 	class Startup
 	{
